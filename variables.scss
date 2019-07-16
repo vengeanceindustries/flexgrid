@@ -1,0 +1,31 @@
+$fontSize_base: 16; // base font-size in pixels
+
+$mqs_for_grid: (
+	xs: ( 320 / $base * 1em),
+	sm: ( 600 / $base * 1em),
+	md: ( 900 / $base * 1em),
+	lg: (1200 / $base * 1em)
+);
+
+$cols_for_grid: (
+	2: 'half',
+	3: 'third',
+	4: 'quarter',
+	5: 'fifth',
+	6: 'sixth',
+	10: 'tenth',
+	a: 'full',
+	b: 'fit',
+	c: 'shrink'
+);
+
+$gutter_sizes: (
+	1: 0.5rem,
+	2: 1.0rem,
+	3: 1.5rem,
+	4: 2.0rem
+);
+
+$col_selector: '> .col, > %col';
+
+$prop_gutterV: 'margin-top';

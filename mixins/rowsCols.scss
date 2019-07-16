@@ -1,0 +1,89 @@
+// make .row flex, and .col children become columns
+@mixin rows($append: '') {
+	.row#{$append},
+	%row#{$append} {
+		display: flex;
+		flex-wrap: wrap;
+	}
+}
+
+@mixin col-even () {
+	flex: 1 1 0%;
+}
+@mixin col-fit () {
+	flex: 1 1 auto;
+	max-width: none;
+}
+@mixin col-maxWidth ($width) {
+	flex-basis: $width;
+	max-width: $width;
+}
+@mixin col-width ($width) {
+	flex: 0 1 $width;
+	max-width: $width;
+}
+@mixin col-full () {
+	flex: 0 0 100%;
+	max-width: 100%;
+}
+@mixin col-shrink () {
+	flex-grow: 0;
+	flex-basis: auto;
+	max-width: none; // IE fallback
+	max-width: fit-content;
+}
+
+// Set column sizes explicitly
+// .col-half { flex: 0 1 50%; }
+// .col-third--sm { @media for_tablet_portrait_up { flex: 0 1 33.33333%; } }
+@mixin col-sizes ($append: '') {
+	@each $num, $value in $cols_for_grid {
+		.col-#{$value}#{$append},
+		%col-#{$value}#{$append},
+		.row .col.col-#{$value}#{$append},
+		.row %col.col-#{$value}#{$append} {
+			@if (type-of($num) == 'number') {
+				@include col-width(100%/$num);
+			}
+			@if ($value == 'full') {
+				@include col-full;
+			}
+			@if ($value == 'fit') {
+				@include col-fit;
+			}
+			@if ($value == 'shrink') {
+				@include col-shrink;
+			}
+		}
+	}
+}
+
+// Make all columns in the row even-width
+// .row-2cols { flex, row, wrap; > .col { flex: 0 1 50%; } }
+// .row-3cols--sm { @media for_tablet_portrait_up { flex, row, wrap; > .col { flex: 0 1 33.33333%; } } }
+@mixin row-cols ($append: '', $selector: $col_selector) {
+	@each $num, $value in $cols_for_grid {
+		$end: '#{$num}cols#{$append}';
+		@if (type-of($num) != 'number') {
+			$end: '#{$value}#{$append}';
+		}
+		.row-#{$end},
+		%row-#{$end} {
+			@if ($value != 'full') {
+				@if (type-of($num) == 'number') {
+					@if ($append == '') {
+						@extend %row--always;
+					} @else {
+						@extend %row#{$append};
+					}
+				}
+				@if ($value == 'fit') {
+					flex-wrap: nowrap !important;
+				}
+				#{$selector} {
+					@extend %col-#{$value}#{$append};
+				}
+			}
+		}
+	}
+}

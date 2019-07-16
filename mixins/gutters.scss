@@ -1,0 +1,61 @@
+@mixin gutter_horiz ($gutter: $gutter_global, $selector: '> .col') {
+	margin-left: -$gutter;
+	#{$selector} {
+		padding-left: $gutter;
+	}
+}
+@mixin gutter_vert ($gutter: $gutter_global, $selector: '> .col') {
+	#{$selector} {
+		#{$prop_gutterV}: $gutter;
+	}
+}
+
+@mixin gutters_global ($append: '') {
+	.gutter#{$append},
+	%gutter#{$append} {
+		@content;
+	}
+}
+
+@mixin gutters ($gutterH: $gutter_global, $gutterV: $gutterH) {
+	@include gutter_horiz($gutterH);
+	@include gutter_vert($gutterV);
+}
+
+// Custom gutter sizes 8px, 16px, 24px, 32px //
+// .gutter-1 { margin: 0.5rem }
+// .gutter-2--sm { margin: 1rem; tablet-portrait+ }
+// .gutterH-3--md { margin: 1.5rem (horizontal); tablet-landscape+ }
+// .gutterV-4--lg { margin: 2rem (vertical); desktop+ }
+@mixin gutter-sizes ($append: '') {
+	$selector: '&-col, > .col';
+	@each $size, $gutter in $gutter_sizes {
+		$end: '-#{$size}#{$append}';
+
+		@include gutters_global('V#{$end}') {
+			@include gutter_vert($gutter, $selector);
+		}
+		@include gutters_global('H#{$end}') {
+			@include gutter_horiz($gutter, $selector);
+		}
+		// extends the above ^ like: .gutterV, .gutter {} .gutterH, .gutter {}
+		@include gutters_global($end) {
+			@extend %gutterV#{$end};
+			@extend %gutterH#{$end};
+		}
+	}
+}
+
+// Also works with hutter sizes & media queries:
+// .gutter--flush.gutter-3--sm { margin-bottom: -1.5rem; tablet-portrait+ }
+@mixin gutter-flush ($append: '') {
+	@each $size, $gutter in $gutter_sizes {
+		$end: '-#{$size}#{$append}';
+		.gutter--flush#{$end},
+		%gutter--flush#{$end},
+		.gutter--flush.gutterV#{$end},
+		.gutter--flush%gutterV#{$end} {
+			#{$prop_gutterV}: -$gutter;
+		}
+	}
+}

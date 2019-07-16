@@ -1,0 +1,46 @@
+/* Rows & Columns */
+// DEFAULT: Make .row > .col be a column in landscape+
+.row,
+%row {
+	&:not(.row--lg) {
+		@extend %row--md;
+	}
+}
+.col,
+%col-even {
+	@include col-even;
+}
+
+// Default Gutters are universally 0.5rem (8px) in mobile devices, and 1rem (16px) at tablet-landscape & above
+// .gutterH (Horizontal) adds negative margin-left to the .row, and padding-left to each child .col
+// .gutterV (Vertical) adds margin-bottom to each child .col
+// .gutter applies both horiz & vert space
+.gutter,
+%gutter {
+	&V, & {
+		@extend %gutterV-1;
+		@extend %gutterV-2--md;
+		&-col {
+			@extend %gutterV-1-col;
+			@extend %gutterV-2--md-col;
+		}
+	}
+	&H, & {
+		@extend %gutterH-1;
+		@extend %gutterH-2--md;
+		&-col {
+			@extend %gutterH-1-col;
+			@extend %gutterH-2--md-col;
+		}
+	}
+}
+
+// Default .gutter--flush will undo bottom margin in mobile & tablet landscape +
+%gutter--flush {
+	@extend %gutter--flush-1;
+	@extend %gutter--flush-2--md;
+}
+.col--flush.col,
+%col--flush {
+	#{$prop_gutterV}: 0 !important;
+}
